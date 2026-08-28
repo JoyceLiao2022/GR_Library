@@ -18,6 +18,12 @@ g++ -std=c++17 -O3 src/gsr.cpp tools/gsr_main.cpp -o gsr
 
 Results are written to the current directory in `gnrs_<filename>` or `gsrs_<filename>`.
 
+## Cleanup
+
+```bash
+rm -f gnr.exe gsr.exe
+```
+
 ## Batch Testing Usage
 
 ```bash
