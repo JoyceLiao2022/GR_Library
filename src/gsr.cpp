@@ -420,7 +420,7 @@ void run_gsr_batch_test(const std::string& prefix, int n) {
 }
 
 // Example usage: ./gsr banknote_100_4_gr0.log
-int main(int argc, char* argv[]) {
+int run_gsr_cli(int argc, char* argv[]) {
     // batch testing
     // if (argc == 3) {
     //     std::string prefix = argv[1];
