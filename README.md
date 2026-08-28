@@ -5,7 +5,7 @@ Compute **General Necessary Reasons (GNR)** or **General Sufficient Reasons (GSR
 ## Compilation (use O3 flag for best results)
 
 ```bash
-g++ -std=c++17 -O3 gnr.cpp -o gnr
+g++ -std=c++17 -O3 src/gnr.cpp tools/gnr_main.cpp -o gnr
 g++ -std=c++17 -O3 src/gsr.cpp tools/gsr_main.cpp -o gsr
 ```
 
