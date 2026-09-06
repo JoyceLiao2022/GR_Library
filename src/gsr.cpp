@@ -1,4 +1,5 @@
 #include "common.h"
+#include "gr/gr.h"
 
 namespace gr::detail::gsr {
 
@@ -404,6 +405,39 @@ namespace gr::detail::gsr {
         return GSR(root.get(), true);
     }
 
+    static gr::ReasonSet to_public_reason_set(const ReasonSet& internal_reasons)
+    {
+        gr::ReasonSet public_reasons;
+        public_reasons.reserve(internal_reasons.size());
+
+        for (const auto& internal_reason : internal_reasons) {
+            gr::Reason public_reason;
+
+            for (int v = 0; v < num_variables; ++v) {
+                if (!internal_reason.has_var(v)) {
+                    continue;
+                }
+
+                int card =
+                    (v < static_cast<int>(global_cardinalities.size()))
+                    ? global_cardinalities[v]
+                    : S_WORDS * 64;
+
+                const uint64_t* states =
+                    internal_reason.states.data() + v * S_WORDS;
+
+                public_reason.push_back({
+                    v,
+                    bitmask_to_string(states, card)
+                    });
+            }
+
+            public_reasons.push_back(std::move(public_reason));
+        }
+
+        return public_reasons;
+    }
+
     BatchProcessResult process_gsr_file(const std::string& filename) {
         auto start_time = std::chrono::high_resolution_clock::now();
         ReasonSet result = compute_gsrs_from_file(filename);
@@ -468,4 +502,16 @@ namespace gr::detail::gsr {
 
         return 0;
     }
-} // namespace closed
+} // namespace gr::detail::gsr
+
+namespace gr {
+
+    ReasonSet compute_gsrs_from_file(const std::string& filepath)
+    {
+        auto internal_reasons =
+            detail::gsr::compute_gsrs_from_file(filepath);
+
+        return detail::gsr::to_public_reason_set(internal_reasons);
+    }
+
+} // namespace gr
