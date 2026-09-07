@@ -6,50 +6,47 @@ tools built on top of the same public API.
 
 ## Build 
 
-The project requires a C++17-compatible compiler.
+### Requirements
 
-Run all commands from the repository root
+- A C++17-compatible compiler
+- CMake 3.16 or newer
 
-### Compile the library sources 
+Clone the repository and run the following commands from the repository root:
 
 ```bash
-g++ -std=c++17 -O3 -Iinclude -c src/gsr.cpp -o gsr.o
-g++ -std=c++17 -O3 -Iinclude -c src/gnr.cpp -o gnr.o
+cmake -S . -B build
+cmake --build build
 ```
 
-### Create the static library
+### Release Build
 
 ```bash
-ar rcs libgr.a gsr.o gnr.o
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 
-### Build the CLI exe
+### Usage (from the repository root)
 
 ```bash
-g++ -std=c++17 -O3 -Iinclude tools/gsr_main.cpp -L. -lgr -o gsr
-g++ -std=c++17 -O3 -Iinclude tools/gnr_main.cpp -L. -lgr -o gnr
-```
-
-### Usage (in the same folder as gsr or gnr executable)
-
-```bash
-./gnr <input_nnf>
-./gsr <input_nnf>
+./build/gnr <input_nnf>
+./build/gsr <input_nnf>
 ```
 
 Results are written to the current directory in `gnrs_<filename>` or `gsrs_<filename>`.
 
-## Cleanup
+## Clean Rebuild
 
 ```bash
-rm -f gsr.o gnr.o libgr.a gsr gnr gsr.exe gnr.exe
+rm -rf build
+cmake -S . -B build
+cmake --build build
 ```
 
 ## Batch Testing Usage
 
 ```bash
-./gnr <nnf_prefix> <n>
-./gsr <nnf_prefix> <n>
+./build/gnr <nnf_prefix> <n>
+./build/gsr <nnf_prefix> <n>
 ```
 Example: To run batch computation for 100 files on a banknote dataset model with 100 trees and depth 4, uncomment the batch processing lines in main(), locate the logs directory in CREX and run `./<gnr/gsr> <path/to/logs>/banknote_100_4_gr 99`
 
