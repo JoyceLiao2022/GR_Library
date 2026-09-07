@@ -1,15 +1,36 @@
-# C++ GNR/GSR Computation
+# General Reasons Library
 
-Compute **General Necessary Reasons (GNR)** or **General Sufficient Reasons (GSR)** from an NNF log file. Intended to be used on general reason log files produced by CREX.
+A reusable C++ library for computing General Sufficient Reasons (GSRs)
+and General Necessary Reasons (GNRs) from NNF log files, with command-line
+tools built on top of the same public API.
 
-## Compilation (use O3 flag for best results)
+## Build 
+
+The project requires a C++17-compatible compiler.
+
+Run all commands from the repository root
+
+### Compile the library sources 
 
 ```bash
-g++ -std=c++17 -O3 src/gnr.cpp tools/gnr_main.cpp -o gnr
-g++ -std=c++17 -O3 src/gsr.cpp tools/gsr_main.cpp -o gsr
+g++ -std=c++17 -O3 -Iinclude -c src/gsr.cpp -o gsr.o
+g++ -std=c++17 -O3 -Iinclude -c src/gnr.cpp -o gnr.o
 ```
 
-## Usage (in the same folder as gsr or gnr executable)
+### Create the static library
+
+```bash
+ar rcs libgr.a gsr.o gnr.o
+```
+
+### Build the CLI exe
+
+```bash
+g++ -std=c++17 -O3 -Iinclude tools/gsr_main.cpp -L. -lgr -o gsr
+g++ -std=c++17 -O3 -Iinclude tools/gnr_main.cpp -L. -lgr -o gnr
+```
+
+### Usage (in the same folder as gsr or gnr executable)
 
 ```bash
 ./gnr <input_nnf>
@@ -21,7 +42,7 @@ Results are written to the current directory in `gnrs_<filename>` or `gsrs_<file
 ## Cleanup
 
 ```bash
-rm -f gnr.exe gsr.exe
+rm -f gsr.o gnr.o libgr.a gsr gnr gsr.exe gnr.exe
 ```
 
 ## Batch Testing Usage
