@@ -6,6 +6,19 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+
+include(FetchContent)
+
+FetchContent_Declare(
+    pybind11
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG v3.0.1
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(pybind11)
+
 add_library(gr STATIC
     src/gsr.cpp
     src/gnr.cpp
@@ -28,6 +41,10 @@ target_include_directories(gsr PRIVATE
 
 target_link_libraries(gsr PRIVATE gr)
 
+set_target_properties(gr PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
+
 add_executable(gnr
     tools/gnr_main.cpp
 )
@@ -37,3 +54,9 @@ target_include_directories(gnr PRIVATE
 )
 
 target_link_libraries(gnr PRIVATE gr)
+
+pybind11_add_module(gr_python
+    python/bindings.cpp
+)
+
+target_link_libraries(gr_python PRIVATE gr)

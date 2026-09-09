@@ -16,10 +16,36 @@
 #include <numeric>
 #include <stdexcept>
 #include <iomanip>
+#include <cstdint>
 
-// Optimized hardware functions
-#define POPCOUNT(x) __builtin_popcountll(x)
-#define CTZ(x) __builtin_ctzll(x)
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
+//helpers to resolve gcc specific features
+inline int popcount64(std::uint64_t value)
+{
+#ifdef _MSC_VER
+    return static_cast<int>(__popcnt64(value));
+#else
+    return __builtin_popcountll(value);
+#endif
+}
+
+inline int ctz64(std::uint64_t value)
+{
+#ifdef _MSC_VER
+    unsigned long index;
+    _BitScanForward64(&index, value);
+    return static_cast<int>(index);
+#else
+    return __builtin_ctzll(value);
+#endif
+}
+
+// Optimized hardware functions, replaced by general versions
+#define POPCOUNT(x) popcount64(x)
+#define CTZ(x) ctz64(x)
 
 // Global configuration variables 
 inline int num_variables = 0;
