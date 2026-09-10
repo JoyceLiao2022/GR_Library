@@ -60,3 +60,9 @@ pybind11_add_module(gr_python
 )
 
 target_link_libraries(gr_python PRIVATE gr)
+
+add_executable(api_smoke
+    tests/api_smoke.cpp
+)
+
+target_link_libraries(api_smoke PRIVATE gr)
