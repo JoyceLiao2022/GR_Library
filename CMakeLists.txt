@@ -88,3 +88,9 @@ if(BUILD_TESTING)
     )
 
 endif()
+
+add_executable(gr_example
+    examples/example.cpp
+)
+
+target_link_libraries(gr_example PRIVATE gr)
