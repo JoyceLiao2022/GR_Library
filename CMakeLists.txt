@@ -66,3 +66,25 @@ add_executable(api_smoke
 )
 
 target_link_libraries(api_smoke PRIVATE gr)
+
+include(CTest)
+
+if(BUILD_TESTING)
+
+    add_test(
+        NAME cpp_api_smoke
+        COMMAND api_smoke
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/toy.log
+    )
+
+    add_test(
+        NAME python_api_smoke
+        COMMAND
+            ${CMAKE_COMMAND} -E env
+            "PYTHONPATH=$<TARGET_FILE_DIR:gr_python>"
+            ${Python_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/python_smoke.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/data/toy.log
+    )
+
+endif()
